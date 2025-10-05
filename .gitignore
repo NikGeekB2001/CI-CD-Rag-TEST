@@ -12,8 +12,7 @@ __pycache__/
 *.pyd
 .Python
 
-# Тесты
-tests/
+
 
 # Объемы (volumes)
 volumes/

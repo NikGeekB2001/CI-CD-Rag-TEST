@@ -3,9 +3,14 @@
 
 # Virtual environments
 venv/
+env/
 
 # Python кэш
 __pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
 
 # Тесты
 tests/
@@ -16,7 +21,37 @@ volumes/
 # Стиль
 style
 
-# Srtemlit
+# Streamlit
 del_app copy
-
 test_search
+
+# gigaragas репозиторий (клонируется при установке)
+gigaragas/
+
+# Кэш моделей
+model_cache/
+.cache/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Логи
+*.log
+
+# Презентация и документация проекта
+PROJECT_PRESENTATION.md
+TODO.md
+
+# Временные файлы
+total.py
+
+# Модели и адаптеры (слишком большие для репозитория)
+models/

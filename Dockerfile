@@ -1,27 +1,13 @@
-# Первая ступень: сборка
-FROM python:3.12-slim AS builder
+FROM python:3.10-slim
 
 WORKDIR /app
 
-# Настройка pip для более надежной загрузки
-ENV PIP_DEFAULT_TIMEOUT=100 \
-    PIP_CACHE_DIR=/tmp/pip-cache \
-    PIP_DISABLE_PIP_VERSION_CHECK=1
-
+# Копируем requirements и устанавливаем зависимости
 COPY requirements.txt .
-RUN pip install --user --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Вторая ступень: запуск
-FROM python:3.12-slim
-
-WORKDIR /app
-
-# Копируем только необходимые файлы
-COPY --from=builder /root/.local /root/.local
+# Копируем исходный код и модели
 COPY . .
 
-# Устанавливаем зависимости
-ENV PATH=/root/.local/bin:$PATH
-
-# Запуск приложения
-CMD ["streamlit", "run", "app.py", "--server.port=8501", "--server.address=0.0.0.0"]
+# Команда для запуска
+CMD ["streamlit", "run", "src/app.py", "--server.address=0.0.0.0"]

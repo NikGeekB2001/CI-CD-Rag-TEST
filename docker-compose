@@ -1,5 +1,0 @@
-      PID    PPID    PGID     WINPID   TTY         UID    STIME COMMAND
-     3728       1    3728      30824  cons2     197608 10:14:57 /usr/bin/bash
-     4050    3728    4050      38420  cons2     197608 10:29:37 /usr/bin/PS
-O    1354       1    1354      42388  cons0     197608 21:23:15 /usr/bin/bash
-     3720       1    3720      31796  cons1     197608 10:14:56 /usr/bin/bash

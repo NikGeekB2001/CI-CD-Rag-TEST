@@ -10,51 +10,6 @@ jobs:
   test:
     runs-on: ubuntu-latest
     
-    services:
-      etcd:
-        image: quay.io/coreos/etcd:v3.5.5
-        options: >-
-          --env ETCD_AUTO_COMPACTION_MODE=revision
-          --env ETCD_AUTO_COMPACTION_RETENTION=1000
-          --env ETCD_QUOTA_BACKEND_BYTES=4294967296
-          --env ETCD_SNAPSHOT_COUNT=50000
-          --entrypoint etcd
-          --health-cmd "etcdctl endpoint health"
-          --health-interval 30s
-          --health-timeout 20s
-          --health-retries 3
-        cmd: ["-advertise-client-urls=http://127.0.0.1:2379", "-listen-client-urls", "http://0.0.0.0:2379", "--data-dir", "/etcd"]
-
-      minio:
-        image: minio/minio:RELEASE.2023-03-20T20-16-18Z
-        ports:
-          - "9001:9001"
-          - "9000:9000"
-        options: >-
-          --env MINIO_ACCESS_KEY=minioadmin
-          --env MINIO_SECRET_KEY=minioadmin
-          --entrypoint minio
-          --health-cmd "curl -f http://localhost:9000/minio/health/live"
-          --health-interval 30s
-          --health-timeout 20s
-          --health-retries 3
-        cmd: ["server", "/minio_data", "--console-address", ":9001"]
-
-      milvus:
-        image: milvusdb/milvus:v2.3.0
-        ports:
-          - 19530:19530
-          - 9091:9091
-        options: >-
-          --env ETCD_ENDPOINTS=etcd:2379
-          --env MINIO_ADDRESS=minio:9000
-          --entrypoint milvus
-          --health-cmd "curl -f http://localhost:9091/healthz || exit 1"
-          --health-interval 30s
-          --health-timeout 10s
-          --health-retries 5
-        cmd: ["run", "standalone"]
-
     steps:
     - uses: actions/checkout@v3
     
@@ -75,6 +30,16 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
+
+    - name: Start Milvus services
+      run: |
+        docker compose -f docker-compose.yml up -d etcd minio milvus-standalone
+        # Wait for etcd
+        timeout 300 bash -c 'until curl -f http://localhost:2379/health; do sleep 5; done' || true
+        # Wait for minio
+        timeout 300 bash -c 'until curl -f http://localhost:9000/minio/health/live; do sleep 5; done' || true
+        # Wait for milvus
+        timeout 300 bash -c 'until curl -f http://localhost:9091/healthz; do sleep 5; done' || true
         
     - name: Run tests with pytest
       run: |

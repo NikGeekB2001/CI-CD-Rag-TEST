@@ -19,16 +19,16 @@ jobs:
           --env ETCD_QUOTA_BACKEND_BYTES=4294967296
           --env ETCD_SNAPSHOT_COUNT=50000
           --entrypoint etcd
+          --health-cmd "etcdctl endpoint health"
+          --health-interval 30s
+          --health-timeout 20s
+          --health-retries 3
           --
           -advertise-client-urls=http://127.0.0.1:2379
           -listen-client-urls
           http://0.0.0.0:2379
           --data-dir
           /etcd
-          --health-cmd "etcdctl endpoint health"
-          --health-interval 30s
-          --health-timeout 20s
-          --health-retries 3
 
       minio:
         image: minio/minio:RELEASE.2023-03-20T20-16-18Z
@@ -39,15 +39,15 @@ jobs:
           --env MINIO_ACCESS_KEY=minioadmin
           --env MINIO_SECRET_KEY=minioadmin
           --entrypoint minio
+          --health-cmd "curl -f http://localhost:9000/minio/health/live"
+          --health-interval 30s
+          --health-timeout 20s
+          --health-retries 3
           --
           server
           /minio_data
           --console-address
           :9001
-          --health-cmd "curl -f http://localhost:9000/minio/health/live"
-          --health-interval 30s
-          --health-timeout 20s
-          --health-retries 3
 
       milvus:
         image: milvusdb/milvus:v2.3.0
@@ -58,13 +58,13 @@ jobs:
           --env ETCD_ENDPOINTS=etcd:2379
           --env MINIO_ADDRESS=minio:9000
           --entrypoint milvus
-          --
-          run
-          standalone
           --health-cmd "curl -f http://localhost:9091/healthz || exit 1"
           --health-interval 30s
           --health-timeout 10s
           --health-retries 5
+          --
+          run
+          standalone
 
     steps:
     - uses: actions/checkout@v3

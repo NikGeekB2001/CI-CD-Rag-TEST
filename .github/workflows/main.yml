@@ -31,12 +31,6 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
-    - name: Pre-load models
-      run: |
-        python -c "from transformers import AutoTokenizer, AutoModelForCausalLM; AutoTokenizer.from_pretrained('sberbank-ai/rugpt3large_based_on_gpt2'); AutoModelForCausalLM.from_pretrained('sberbank-ai/rugpt3large_based_on_gpt2', low_cpu_mem_usage=True)"
-        python -c "from transformers import AutoTokenizer, AutoModelForQuestionAnswering, AutoModelForTokenClassification; AutoTokenizer.from_pretrained('Den4ikAI/rubert_large_squad_2'); AutoModelForQuestionAnswering.from_pretrained('Den4ikAI/rubert_large_squad_2'); AutoModelForTokenClassification.from_pretrained('Den4ikAI/rubert_large_squad_2', num_labels=13)"
-        python -c "from sentence_transformers import SentenceTransformer; SentenceTransformer('intfloat/multilingual-e5-large')"
-
     - name: Start Milvus services
       run: |
         docker compose -f docker-compose.yml up -d etcd minio milvus-standalone

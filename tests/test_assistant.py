@@ -1,4 +1,5 @@
 import pytest
+import os
 from src.medical_assistant import MedicalAssistant
 
 def test_get_question_type(assistant):
@@ -19,10 +20,11 @@ def test_template_generation(assistant):
     assert "к врачу" in response
 
 # Тест для RAG-конвейера
-def test_rag_pipeline_search():
-    from src.rag_pipeline import RAGPipeline
-    rag = RAGPipeline()
-    if rag.collection: # Тест только если Milvus доступен
-        result = rag.search("простуда")
-        assert isinstance(result, str)
-        assert len(result) > 0
+def test_rag_pipeline_search(rag_pipeline):
+    result = rag_pipeline.search("простуда")
+    if os.getenv('CI'):
+        assert "Mock context for: простуда" in result
+    else:
+        if hasattr(rag_pipeline, 'collection') and rag_pipeline.collection: # Тест только если Milvus доступен
+            assert isinstance(result, str)
+            assert len(result) > 0

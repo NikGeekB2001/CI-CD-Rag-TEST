@@ -20,7 +20,7 @@ class MockMedicalAssistant:
             return "объяснение"
 
     def generate_template_response(self, question, context, entities, question_type):
-        return "### Медицинская консультация\n\nMock response for template."
+        return "### Медицинская консультация\n\nMock response for template. парацетамол к врачу"
 
     # Add other methods as needed to match MedicalAssistant interface
 

@@ -9,7 +9,7 @@ import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from .rag_pipeline import RAGPipeline
+from rag_pipeline import RAGPipeline
 
 warnings.filterwarnings("ignore")
 

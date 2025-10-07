@@ -136,6 +136,9 @@ pytest tests/ --cov=. --cov-report=term-missing
 
 5. После push CI/CD pipeline автоматически запустит тесты и проверит код.
 
+### CI/CD pipeline
+ git add . && git commit -m "Increase disk space cleanup in CI/CD to fix container startup failures" && git push
+
 ### Рабочий процесс Git
 
 - **main** — основная ветка для стабильного кода

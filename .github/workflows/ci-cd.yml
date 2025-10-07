@@ -59,13 +59,16 @@ jobs:
       uses: jlumbroso/free-disk-space@main
       with:
         # This action removes unnecessary packages and cleans up disk space
-        tool-cache: false
+        tool-cache: true
         android: true
         dotnet: true
         haskell: true
         large-packages: true
         docker-images: true
         swap-storage: true
+        python: true
+        node: true
+        codeql: true
 
     - name: Set up Python
       uses: actions/setup-python@v4
